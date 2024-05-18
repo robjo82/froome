@@ -1,6 +1,5 @@
 package org.froome.orderservice.model;
 
-import org.froome.orderservice.model.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
