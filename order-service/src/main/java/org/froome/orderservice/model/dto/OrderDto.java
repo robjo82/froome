@@ -6,6 +6,7 @@ import lombok.Data;
 import org.froome.orderservice.model.OrderStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class OrderDto {
@@ -20,5 +21,8 @@ public class OrderDto {
 
     @NotBlank
     private long userId;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private List<OrderItemDto> orderItems;
 }
 
