@@ -14,7 +14,7 @@ public class AuthService {
     public boolean isNotAdmin(String token) {
         if (jwtService.validateToken(token)) {
             Map<String, Object> claims = jwtService.extractAllClaims(token);
-            return (!((boolean) claims.get("isntAdmin")));
+            return (!((boolean) claims.get("isAdmin")));
         } else {
             throw new UnauthorizedException("The provided token is not valid.");
         }
