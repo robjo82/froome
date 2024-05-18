@@ -24,7 +24,7 @@ public class OrderService {
 
     public OrderDto createOrder(OrderDto orderDto, long userId) {
         Order order = modelMapper.map(orderDto, Order.class);
-        order.setUserId(userService.getUserById(userId));
+        order.setUser(userService.getUserById(userId));
         Order savedOrder = orderRepository.save(order);
         return modelMapper.map(savedOrder, OrderDto.class);
     }
@@ -43,7 +43,7 @@ public class OrderService {
     }
     
     public List<OrderDto> getOrdersByUserId(long userId) {
-        List<Order> orders = orderRepository.findByUserIdId(userId);
+        List<Order> orders = orderRepository.findByUserId(userId);
         return orders.stream()
                 .map(order -> modelMapper.map(order, OrderDto.class))
                 .collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class OrderService {
 
     public OrderDto updateOrderStatus(long id, OrderStatus status) {
         Order order = orderRepository.findById(id).orElseThrow();
-        order.setStatus(status);
+        order.setStatus(status.getValue());
         Order updatedOrder = orderRepository.save(order);
         return modelMapper.map(updatedOrder, OrderDto.class);
     }

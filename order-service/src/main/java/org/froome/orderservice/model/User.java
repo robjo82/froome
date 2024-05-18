@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 @Data
 public class User {
 
@@ -28,4 +28,3 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 }
-

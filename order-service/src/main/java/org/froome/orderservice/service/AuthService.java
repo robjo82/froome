@@ -50,7 +50,7 @@ public class AuthService {
             Map<String, Object> claims = jwtService.extractAllClaims(token);
             String userId = claims.get("id").toString();
             Order order = orderRepository.findById(orderId).orElseThrow();
-            return !Objects.equals(userId, order.getUserId().toString());
+            return !Objects.equals(userId, order.getUser().getId().toString());
         } else {
             throw new UnauthorizedException("The provided token is not valid.");
         }
