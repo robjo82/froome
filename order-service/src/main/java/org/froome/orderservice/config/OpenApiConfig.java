@@ -23,7 +23,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Order API")
                         .version("1.0")
-                        .description("Product API v1.0")
+                        .description("Order API v1.0")
                 );
     }
 
