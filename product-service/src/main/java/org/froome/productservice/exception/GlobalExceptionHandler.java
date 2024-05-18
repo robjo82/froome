@@ -1,6 +1,6 @@
 package org.froome.productservice.exception;
 
-import com.labellecave.product.model.dto.ExceptionDto;
+import org.froome.productservice.model.dto.ExceptionDto;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;

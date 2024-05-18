@@ -15,12 +15,6 @@ public class ProductDto {
     private String description;
 
     @NotBlank
-    private float alcoholDegree;
-
-    @NotBlank
-    private int volume;
-
-    @NotBlank
     private float price;
 
     @NotBlank

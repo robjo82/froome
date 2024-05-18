@@ -1,10 +1,12 @@
 package org.froome.productservice.controller;
 
-import com.labellecave.product.exception.ForbiddenException;
-import com.labellecave.product.model.dto.ExceptionDto;
-import com.labellecave.product.model.dto.ProductDto;
-import com.labellecave.product.service.AuthService;
-import com.labellecave.product.service.ProductService;
+import org.froome.productservice.exception.ForbiddenException;
+import org.froome.productservice.model.dto.ExceptionDto;
+import org.froome.productservice.model.dto.ProductDto;
+import org.froome.productservice.service.AuthService;
+import org.froome.productservice.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,39 +31,50 @@ public class ProductController {
     private final AuthService authService;
 
     @GetMapping
-    @Schema(
-            title = "Get all products",
-            description = "There is no need to be authenticated to get all products."
+    @Operation(
+            summary = "Get all products",
+            description = "There is no need to be authenticated to get all products.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Products found"),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            }
     )
-    @ApiResponse(responseCode = "200", description = "Products found")
-    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    public ResponseEntity<Iterable<ProductDto>> getAll(@RequestParam(required = false) int page, @RequestParam(required = false) int size) {
+    public ResponseEntity<Iterable<ProductDto>> getAll(
+            @RequestParam(required = false, name = "page", defaultValue = "1") Integer page,
+            @RequestParam(required = false, name = "size", defaultValue = "10") Integer size
+    ) {
         Iterable<ProductDto> products = productService.getProducts(page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @Schema(
-            title = "Get a product by id",
-            description = "There is no need to be authenticated to get a product."
+    @Operation(
+            summary = "Get a product by id",
+            description = "There is no need to be authenticated to get a product.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Product found"),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            }
     )
-    @ApiResponse(responseCode = "200", description = "Product found")
-    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    public ResponseEntity<ProductDto> get(@PathVariable long id) {
+    public ResponseEntity<ProductDto> get(
+            @Parameter(description = "ID of the product to be retrieved", required = true)
+            @PathVariable long id) {
         ProductDto product = productService.getProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    @Schema(
-            title = "Create a new product",
-            description = "Only an admin can create a product."
+    @Operation(
+            summary = "Create a new product",
+            description = "Only an admin can create a product.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Product created"),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponse(responseCode = "201", description = "Product created")
-    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
     public ResponseEntity<ProductDto> create(@Valid @RequestBody ProductDto productDto, Authentication authentication) {
         String token = authentication.getPrincipal().toString();
         if (authService.isNotAdmin(token)) {
@@ -72,17 +85,21 @@ public class ProductController {
         }
     }
 
-
     @PutMapping("/{id}")
-    @Schema(
-            title = "Update a product by id",
-            description = "Only an admin can update a product."
+    @Operation(
+            summary = "Update a product by id",
+            description = "Only an admin can update a product.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Product updated"),
+                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponse(responseCode = "200", description = "Product updated")
-    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    public ResponseEntity<ProductDto> update(@PathVariable long id, @Valid @RequestBody ProductDto productDto, Authentication authentication) {
+    public ResponseEntity<ProductDto> update(
+            @Parameter(description = "ID of the product to be updated", required = true)
+            @PathVariable long id,
+            @Valid @RequestBody ProductDto productDto, Authentication authentication) {
         String token = authentication.getPrincipal().toString();
         if (authService.isNotAdmin(token)) {
             throw new ForbiddenException("You are not allowed to update a product.");
@@ -93,14 +110,19 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @Schema(
-            title = "Delete a product by id",
-            description = "Only an admin can delete a product."
+    @Operation(
+            summary = "Delete a product by id",
+            description = "Only an admin can delete a product.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Product deleted"),
+                    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponse(responseCode = "204", description = "Product deleted")
-    @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
-    public ResponseEntity<Void> delete(@PathVariable long id, Authentication authentication) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID of the product to be deleted", required = true)
+            @PathVariable long id,
+            Authentication authentication) {
         String token = authentication.getPrincipal().toString();
         if (authService.isNotAdmin(token)) {
             throw new ForbiddenException("You are not allowed to delete a product.");

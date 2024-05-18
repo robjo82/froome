@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "products")
+@Table(name = "Product")
 @Data
 public class Product {
 
@@ -17,12 +17,6 @@ public class Product {
 
     @Column()
     private String description;
-
-    @Column(nullable = false, name = "alcohol_degree")
-    private float alcoholDegree;
-
-    @Column(nullable = false)
-    private int volume;
 
     @Column(nullable = false)
     private float price;

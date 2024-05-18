@@ -1,9 +1,9 @@
-package org.froome.productservice.service;
+package org.froome.orderservice.service;
 
+import lombok.RequiredArgsConstructor;
 import org.froome.productservice.model.Product;
 import org.froome.productservice.model.dto.ProductDto;
 import org.froome.productservice.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,6 +1,6 @@
 package org.froome.productservice.service;
 
-import com.labellecave.product.exception.UnauthorizedException;
+import org.froome.productservice.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

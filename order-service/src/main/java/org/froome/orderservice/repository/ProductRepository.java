@@ -1,4 +1,4 @@
-package org.froome.productservice.repository;
+package org.froome.orderservice.repository;
 
 import org.froome.productservice.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
