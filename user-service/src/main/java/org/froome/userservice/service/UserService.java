@@ -74,5 +74,9 @@ public class UserService {
         dto.setAdmin(user.isAdmin());
         return dto;
     }
+
+    public int countUsers() {
+        return (int) userRepository.count();
+    }
 }
 

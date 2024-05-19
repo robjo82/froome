@@ -44,7 +44,7 @@ public class UserController {
     )
     public ResponseEntity<UserDto> register(@Valid @RequestBody UserDto userDto, Authentication authentication) {
         String token = authentication != null ? authentication.getPrincipal().toString() : null;
-        if (userDto.isAdmin() && (token == null || authService.isNotAdmin(token))) {
+        if (userService.countUsers() > 0 && userDto.isAdmin() && (token == null || authService.isNotAdmin(token))) {
             throw new ForbiddenException("Only an admin can create another admin user.");
         }
 
