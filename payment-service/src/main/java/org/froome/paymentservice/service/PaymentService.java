@@ -1,5 +1,6 @@
 package org.froome.paymentservice.service;
 
+import org.froome.paymentservice.exception.NotFoundException;
 import org.froome.paymentservice.model.Payment;
 import org.froome.paymentservice.model.dto.PaymentDto;
 import org.froome.paymentservice.repository.PaymentRepository;
@@ -19,7 +20,7 @@ public class PaymentService {
 
     public PaymentDto createPayment(PaymentDto paymentDto) {
         Payment payment = new Payment();
-        payment.setOrder(orderRepository.findById(paymentDto.getOrderId()).orElseThrow());
+        payment.setOrder(orderRepository.findById(paymentDto.getOrderId()).orElseThrow(() -> new NotFoundException("Order not found")));
         payment.setPaymentDate(paymentDto.getPaymentDate());
         payment.setAmount(paymentDto.getAmount());
         payment = paymentRepository.save(payment);
@@ -33,12 +34,12 @@ public class PaymentService {
     }
 
     public PaymentDto getPaymentById(Long id) {
-        Payment payment = paymentRepository.findById(id).orElseThrow();
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new NotFoundException("Payment not found"));
         return toDto(payment);
     }
 
     public void deletePayment(Long id) {
-        Payment payment = paymentRepository.findById(id).orElseThrow();
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new NotFoundException("Payment not found"));
         paymentRepository.delete(payment);
     }
 

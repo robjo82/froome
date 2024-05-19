@@ -1,5 +1,6 @@
 package org.froome.orderservice.service;
 
+import org.froome.orderservice.exception.NotFoundException;
 import org.froome.orderservice.model.dto.OrderItemDto;
 import org.froome.orderservice.model.OrderItem;
 import org.froome.orderservice.repository.OrderItemRepository;
@@ -21,8 +22,8 @@ public class OrderItemService {
 
     public OrderItemDto addItem(Long orderId, OrderItemDto orderItemDto) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(orderRepository.findById(orderId).orElseThrow());
-        orderItem.setProduct(productRepository.findById(orderItemDto.getProductId()).orElseThrow());
+        orderItem.setOrder(orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found")));
+        orderItem.setProduct(productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new NotFoundException("Product not found")));
         orderItem.setQuantity(orderItemDto.getQuantity());
         orderItem.setPrice(orderItemDto.getPrice());
         orderItem = orderItemRepository.save(orderItem);
@@ -36,13 +37,13 @@ public class OrderItemService {
     }
 
     public OrderItemDto getItemById(Long orderId, Long itemId) {
-        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow();
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow(() -> new NotFoundException("Order item not found"));
         return toDto(orderItem);
     }
 
     public OrderItemDto updateItem(Long orderId, Long itemId, OrderItemDto orderItemDto) {
-        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow();
-        orderItem.setProduct(productRepository.findById(orderItemDto.getProductId()).orElseThrow());
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow(() -> new NotFoundException("Order item not found"));
+        orderItem.setProduct(productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new NotFoundException("Product not found")));
         orderItem.setQuantity(orderItemDto.getQuantity());
         orderItem.setPrice(orderItemDto.getPrice());
         orderItem = orderItemRepository.save(orderItem);
@@ -50,7 +51,7 @@ public class OrderItemService {
     }
 
     public void deleteItem(Long orderId, Long itemId) {
-        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow();
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId).orElseThrow(() -> new NotFoundException("Order item not found"));
         orderItemRepository.delete(orderItem);
     }
 

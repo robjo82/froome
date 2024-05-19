@@ -1,6 +1,7 @@
 package org.froome.paymentservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.froome.paymentservice.exception.NotFoundException;
 import org.froome.paymentservice.exception.UnauthorizedException;
 import org.froome.paymentservice.model.Order;
 import org.froome.paymentservice.repository.OrderRepository;
@@ -20,7 +21,7 @@ public class AuthService {
         if (jwtService.validateToken(token)) {
             Map<String, Object> claims = jwtService.extractAllClaims(token);
             String userId = claims.get("id").toString();
-            Order order = orderRepository.findById(orderId).orElseThrow();
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found"));
             return !Objects.equals(userId, order.getUser().getId().toString());
         } else {
             throw new UnauthorizedException("The provided token is not valid.");

@@ -1,5 +1,6 @@
 package org.froome.productservice.service;
 
+import org.froome.productservice.exception.NotFoundException;
 import org.froome.productservice.model.Product;
 import org.froome.productservice.model.dto.ProductDto;
 import org.froome.productservice.repository.ProductRepository;
@@ -35,12 +36,12 @@ public class ProductService {
     }
 
     public ProductDto getProduct(long id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
         return modelMapper.map(product, ProductDto.class);
     }
 
     public ProductDto updateProduct(long id, ProductDto productDto) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());

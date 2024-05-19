@@ -3,7 +3,6 @@ package org.froome.userservice.controller;
 import org.froome.userservice.exception.ForbiddenException;
 import org.froome.userservice.model.dto.ExceptionDto;
 import org.froome.userservice.model.dto.UserDto;
-import org.froome.userservice.repository.UserRepository;
 import org.froome.userservice.service.AuthService;
 import org.froome.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

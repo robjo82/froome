@@ -1,6 +1,7 @@
 package org.froome.orderservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.froome.orderservice.exception.NotFoundException;
 import org.froome.orderservice.model.Order;
 import org.froome.orderservice.model.OrderStatus;
 import org.froome.orderservice.model.dto.OrderDto;
@@ -38,7 +39,7 @@ public class OrderService {
     }
 
     public OrderDto getOrderById(long id) {
-        Order order = orderRepository.findById(id).orElseThrow();
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found"));
         return modelMapper.map(order, OrderDto.class);
     }
     
@@ -50,7 +51,7 @@ public class OrderService {
     }
 
     public OrderDto updateOrderStatus(long id, OrderStatus status) {
-        Order order = orderRepository.findById(id).orElseThrow();
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found"));
         order.setStatus(status.getValue());
         Order updatedOrder = orderRepository.save(order);
         return modelMapper.map(updatedOrder, OrderDto.class);
