@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: ${PORT:8082}
 
 spring:
   cloud:
     config:
       enabled: false
   datasource:
-    url: jdbc:mysql://localhost:3306/froome
+    url: ${DB_URL:jdbc:mysql://localhost:3306/froome}
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver

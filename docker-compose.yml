@@ -11,6 +11,64 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root --password=password" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user:
+    depends_on:
+      db:
+        condition: service_healthy
+
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://froome-db:3306/froome
+      PORT: 8180
+    ports:
+      - "8180:8180"
+
+  product:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: product-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://froome-db:3306/froome
+      PORT: 8181
+    ports:
+      - "8181:8181"
+
+  payment:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://froome-db:3306/froome
+      PORT: 8182
+    ports:
+      - "8182:8182"
+
+  order:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://froome-db:3306/froome
+      PORT: 8183
+    ports:
+      - "8183:8183"
 
 volumes:
   db_data:
