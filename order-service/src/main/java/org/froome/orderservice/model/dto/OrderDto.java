@@ -8,6 +8,9 @@ import org.froome.orderservice.model.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.froome.orderservice.model.OrderStatus.CREATED;
+
+
 @Data
 public class OrderDto {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -17,9 +20,11 @@ public class OrderDto {
     private LocalDateTime orderDate;
 
     @NotBlank
-    private OrderStatus status;
+    @Schema(defaultValue = "CREATED")
+    private OrderStatus status = CREATED;
 
     @NotBlank
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private long userId;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
