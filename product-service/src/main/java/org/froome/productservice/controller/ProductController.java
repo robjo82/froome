@@ -40,7 +40,7 @@ public class ProductController {
             }
     )
     public ResponseEntity<Iterable<ProductDto>> getAll(
-            @RequestParam(required = false, name = "page", defaultValue = "1") Integer page,
+            @RequestParam(required = false, name = "page", defaultValue = "0") Integer page,
             @RequestParam(required = false, name = "size", defaultValue = "10") Integer size
     ) {
         Iterable<ProductDto> products = productService.getProducts(page, size);
