@@ -2,6 +2,7 @@ package org.froome.productservice.controller;
 
 import org.froome.productservice.exception.ForbiddenException;
 import org.froome.productservice.model.dto.ExceptionDto;
+import org.froome.productservice.model.dto.PagedResponse;
 import org.froome.productservice.model.dto.ProductDto;
 import org.froome.productservice.service.AuthService;
 import org.froome.productservice.service.ProductService;
@@ -39,11 +40,11 @@ public class ProductController {
                     @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
             }
     )
-    public ResponseEntity<Iterable<ProductDto>> getAll(
+    public ResponseEntity<PagedResponse<ProductDto>> getAll(
             @RequestParam(required = false, name = "page", defaultValue = "0") Integer page,
             @RequestParam(required = false, name = "size", defaultValue = "10") Integer size
     ) {
-        Iterable<ProductDto> products = productService.getProducts(page, size);
+        PagedResponse<ProductDto> products = productService.getProducts(page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

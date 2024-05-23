@@ -2,6 +2,7 @@ package org.froome.productservice.service;
 
 import org.froome.productservice.exception.NotFoundException;
 import org.froome.productservice.model.Product;
+import org.froome.productservice.model.dto.PagedResponse;
 import org.froome.productservice.model.dto.ProductDto;
 import org.froome.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,21 @@ public class ProductService {
         return modelMapper.map(savedProduct, ProductDto.class);
     }
 
-    public List<ProductDto> getProducts(int page, int size) {
+    public PagedResponse<ProductDto> getProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll(pageable);
-        return products.stream()
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDto> products = productPage.stream()
                 .map(product -> modelMapper.map(product, ProductDto.class))
                 .collect(Collectors.toList());
+
+        return new PagedResponse<>(
+                products,
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages()
+        );
     }
 
     public ProductDto getProduct(long id) {
