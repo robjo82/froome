@@ -1,6 +1,7 @@
 package org.froome.orderservice.service;
 
 import org.froome.orderservice.exception.NotFoundException;
+import org.froome.orderservice.model.OrderStatus;
 import org.froome.orderservice.model.dto.OrderItemDto;
 import org.froome.orderservice.model.OrderItem;
 import org.froome.orderservice.repository.OrderItemRepository;
@@ -21,14 +22,46 @@ public class OrderItemService {
     private final ProductRepository productRepository;
 
     public OrderItemDto addItem(Long orderId, OrderItemDto orderItemDto) {
-        removeQuantity(orderItemDto.getProductId(), orderItemDto.getQuantity());
+        if (orderItemDto.getQuantity() <= 0) {
+            throw new NotFoundException("Quantity must be greater than 0");
+        }
 
+        if (productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new NotFoundException("Product not found")).getStock() < orderItemDto.getQuantity()) {
+            throw new NotFoundException("Not enough stock");
+        }
+
+        switch (OrderStatus.valueOf(orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found")).getStatus())) {
+            case CREATED:
+                break;
+            case PAID:
+                throw new NotFoundException("Order is already paid");
+            case SHIPPED:
+                throw new NotFoundException("Order is already shipped");
+            case DELIVERED:
+                throw new NotFoundException("Order is already delivered");
+        }
+
+        OrderItem orderItem = orderItemRepository.findByOrderIdAndProductId(orderId, orderItemDto.getProductId()).orElse(null);
+
+        if (orderItem != null) {
+            orderItem.setQuantity(orderItem.getQuantity() + orderItemDto.getQuantity());
+            orderItem.setPrice(orderItem.getProduct().getPrice() * orderItem.getQuantity());
+            orderItem = orderItemRepository.save(orderItem);
+            removeQuantity(orderItem.getProduct().getId(), orderItemDto.getQuantity());
+            return toDto(orderItem);
+        } else {
+            return createOrderItem(orderId, orderItemDto);
+        }
+    }
+
+    private OrderItemDto createOrderItem(Long orderId, OrderItemDto orderItemDto) {
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found")));
         orderItem.setProduct(productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new NotFoundException("Product not found")));
         orderItem.setQuantity(orderItemDto.getQuantity());
-        orderItem.setPrice(orderItemDto.getPrice());
+        orderItem.setPrice(orderItemDto.getQuantity() * orderItem.getProduct().getPrice());
         orderItem = orderItemRepository.save(orderItem);
+        removeQuantity(orderItem.getProduct().getId(), orderItemDto.getQuantity());
         return toDto(orderItem);
     }
 

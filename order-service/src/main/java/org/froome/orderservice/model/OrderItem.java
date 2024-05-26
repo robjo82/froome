@@ -2,7 +2,6 @@ package org.froome.orderservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
@@ -25,6 +24,6 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    private float price;
 }
 

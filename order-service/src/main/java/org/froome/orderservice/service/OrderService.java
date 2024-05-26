@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class OrderService {
     public OrderDto createOrder(OrderDto orderDto, long userId) {
         Order order = modelMapper.map(orderDto, Order.class);
         order.setUser(userService.getUserById(userId));
+        order.setOrderDate(LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
         return modelMapper.map(savedOrder, OrderDto.class);
     }

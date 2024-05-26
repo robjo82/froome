@@ -7,10 +7,9 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
     CREATED("CREATED"),
-    CONFIRMED("CONFIRMED"),
+    PAID("PAID"),
     SHIPPED("SHIPPED"),
-    DELIVERED("DELIVERED"),
-    CANCELLED("CANCELLED");
+    DELIVERED("DELIVERED");
 
     private final String value;
 }

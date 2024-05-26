@@ -63,7 +63,7 @@ public class OrderController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     public ResponseEntity<List<OrderDto>> getAll(
-            @RequestParam(required = false, name = "page", defaultValue = "1") Integer page,
+            @RequestParam(required = false, name = "page", defaultValue = "0") Integer page,
             @RequestParam(required = false, name = "size", defaultValue = "10") Integer size,
             Authentication authentication
     ) {
