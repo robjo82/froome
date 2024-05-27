@@ -2,6 +2,7 @@ package org.froome.orderservice.service;
 
 import org.froome.orderservice.exception.NotFoundException;
 import org.froome.orderservice.model.OrderStatus;
+import org.froome.orderservice.model.Product;
 import org.froome.orderservice.model.dto.OrderItemDto;
 import org.froome.orderservice.model.OrderItem;
 import org.froome.orderservice.repository.OrderItemRepository;
@@ -107,18 +108,21 @@ public class OrderItemService {
     }
 
     private void removeQuantity(Long productId, int quantity) {
-        int oldStock = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).getStock();
-        productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).setStock(oldStock - quantity);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
 
     private void addQuantity(Long productId, int quantity) {
-        int oldStock = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).getStock();
-        productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).setStock(oldStock + quantity);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        product.setStock(product.getStock() + quantity);
+        productRepository.save(product);
     }
 
     private void updateQuantity(Long productId, int oldQuantity, int newQuantity) {
-        int stock = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).getStock();
-        productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found")).setStock(stock + oldQuantity - newQuantity);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        product.setStock(product.getStock() + oldQuantity - newQuantity);
+        productRepository.save(product);
     }
 }
 
