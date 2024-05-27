@@ -3,6 +3,7 @@ package org.froome.paymentservice.service;
 import org.froome.paymentservice.exception.NotFoundException;
 import org.froome.paymentservice.model.Order;
 import org.froome.paymentservice.model.OrderItem;
+import org.froome.paymentservice.model.OrderStatus;
 import org.froome.paymentservice.model.Payment;
 import org.froome.paymentservice.model.dto.PaymentDto;
 import org.froome.paymentservice.repository.PaymentRepository;
@@ -24,6 +25,17 @@ public class PaymentService {
 
     public PaymentDto createPayment(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found"));
+
+        switch (OrderStatus.valueOf(order.getStatus())) {
+            case CREATED:
+                break;
+            case PAID:
+                throw new NotFoundException("Order is already paid");
+            case SHIPPED:
+                throw new NotFoundException("Order is already shipped");
+            case DELIVERED:
+                throw new NotFoundException("Order is already delivered");
+        }
 
         Payment payment = new Payment();
         payment.setOrder(order);
