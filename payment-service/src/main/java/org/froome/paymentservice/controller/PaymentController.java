@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,17 +40,18 @@ public class PaymentController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     public ResponseEntity<PaymentDto> createPayment(
-            @Valid @RequestBody PaymentDto paymentDto,
+            @Parameter(description = "ID of the order", required = true)
+            @RequestParam Long orderId,
             Authentication authentication) {
         String token = authentication.getPrincipal().toString();
-        if (authService.isNotUserAssociatedWithOrder(token, paymentDto.getOrderId())) {
+        if (authService.isNotUserAssociatedWithOrder(token, orderId)) {
             throw new ForbiddenException("You are not allowed to make a payment for this order.");
         }
-        PaymentDto createdPayment = paymentService.createPayment(paymentDto);
+        PaymentDto createdPayment = paymentService.createPayment(orderId);
         return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
     }
 
-    @GetMapping("/order/{orderId}")
+    @GetMapping
     @Operation(
             summary = "Get payments by order ID",
             description = "Get all payments associated with a specific order ID.",
@@ -64,7 +64,7 @@ public class PaymentController {
     )
     public ResponseEntity<List<PaymentDto>> getPaymentsByOrderId(
             @Parameter(description = "ID of the order", required = true)
-            @PathVariable Long orderId,
+            @RequestParam Long orderId,
             Authentication authentication) {
         String token = authentication.getPrincipal().toString();
         if (authService.isNotUserAssociatedWithOrder(token, orderId)) {
