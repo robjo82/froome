@@ -7,9 +7,6 @@ import org.froome.productservice.model.dto.ProductDto;
 import org.froome.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,21 +26,28 @@ public class ProductService {
     }
 
     public PagedResponse<ProductDto> getProducts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productPage = productRepository.findAll(pageable);
+        List<Product> allProductsInStock = productRepository.findByStockGreaterThan(0);
 
-        List<ProductDto> products = productPage.stream()
+        int totalElements = allProductsInStock.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalElements);
+        List<Product> paginatedProducts = allProductsInStock.subList(fromIndex, toIndex);
+
+        List<ProductDto> products = paginatedProducts.stream()
                 .map(product -> modelMapper.map(product, ProductDto.class))
                 .collect(Collectors.toList());
 
         return new PagedResponse<>(
                 products,
-                productPage.getNumber(),
-                productPage.getSize(),
-                productPage.getTotalElements(),
-                productPage.getTotalPages()
+                page,
+                size,
+                totalElements,
+                totalPages
         );
     }
+
 
     public ProductDto getProduct(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
