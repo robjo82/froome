@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -44,6 +47,12 @@ public class UserService {
             return jwtService.generateToken(user.toMap());
         }
         throw new UnauthorizedException("Invalid login credentials");
+    }
+
+    public List<UserDto> getUsers() {
+        List<UserDto> users = new ArrayList<>();
+        userRepository.findAll().forEach(user -> users.add(toDto(user)));
+        return users;
     }
 
     public UserDto getUser(Long id) {

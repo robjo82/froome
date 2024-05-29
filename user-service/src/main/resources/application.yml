@@ -22,10 +22,10 @@ logging:
   level:
     org:
       hibernate:
-        SQL: debug
+        SQL: info
       springframework:
         jdbc:
-          core: debug
+          core: info
     root: info
 
 jwt:

@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -69,6 +71,27 @@ public class UserController {
             @RequestParam String password) {
         String token = userService.login(email, password);
         return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Get all users",
+            description = "Only an admin can get all users.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Users found"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    public ResponseEntity<List<UserDto>> getUsers(Authentication authentication) {
+        String token = authentication.getPrincipal().toString();
+        if (authService.isNotAdmin(token)) {
+            throw new ForbiddenException("You are not allowed to access this resource.");
+        } else {
+            List<UserDto> users = userService.getUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/me")
