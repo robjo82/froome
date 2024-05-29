@@ -5,6 +5,7 @@ import org.froome.orderservice.exception.NotFoundException;
 import org.froome.orderservice.model.Order;
 import org.froome.orderservice.model.OrderStatus;
 import org.froome.orderservice.model.dto.OrderDto;
+import org.froome.orderservice.repository.OrderItemRepository;
 import org.froome.orderservice.repository.OrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final OrderItemService orderItemService;
+    private final OrderItemRepository orderItemRepository;
 
     public OrderDto createOrder(OrderDto orderDto, long userId) {
         Order order = modelMapper.map(orderDto, Order.class);
@@ -60,6 +63,7 @@ public class OrderService {
     }
 
     public void deleteOrder(long id) {
+        orderItemRepository.findByOrderId(id).forEach(orderItem -> orderItemService.deleteItem(id, orderItem.getId()));
         orderRepository.deleteById(id);
     }
 }
