@@ -17,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final OrderService orderService;
 
     public UserDto register(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -60,6 +61,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        orderService.deleteOrdersByUserId(id);
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         userRepository.delete(user);
     }
