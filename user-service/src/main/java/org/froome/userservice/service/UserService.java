@@ -65,6 +65,7 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setAddress(userDto.getAddress());
+        user.setAdmin(userDto.isAdmin());
         user = userRepository.save(user);
         return toDto(user);
     }
