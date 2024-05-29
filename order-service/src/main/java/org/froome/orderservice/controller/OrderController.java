@@ -98,7 +98,7 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/mine")
     @Operation(
             summary = "Get orders by user ID",
             description = "Get all orders associated with a user ID. Admins and the user can access.",
@@ -109,15 +109,13 @@ public class OrderController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     public ResponseEntity<List<OrderDto>> getByUserId(
-            @Parameter(description = "ID of the user to retrieve orders for", required = true)
-            @PathVariable long userId,
             Authentication authentication) {
-        String token = authentication.getPrincipal().toString();
-        if (authService.isNotAdmin(token) && authService.getUserIdFromToken(token) != userId) {
-            throw new ForbiddenException("You are not allowed to view these orders.");
-        }
-        List<OrderDto> orders = orderService.getOrdersByUserId(userId);
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        return new ResponseEntity<>(
+                orderService.getOrdersByUserId(
+                        authService.getUserIdFromToken(
+                                authentication.getPrincipal().toString())
+                ),
+                HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
