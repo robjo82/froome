@@ -29,4 +29,13 @@ public class AuthService {
             throw new UnauthorizedException("The provided token is not valid.");
         }
     }
+
+    public long getUserIdFromToken(String token) {
+        if (jwtService.validateToken(token)) {
+            Map<String, Object> claims = jwtService.extractAllClaims(token);
+            return Long.parseLong(claims.get("id").toString());
+        } else {
+            throw new UnauthorizedException("The provided token is not valid.");
+        }
+    }
 }

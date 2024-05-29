@@ -71,6 +71,22 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    @Operation(
+            summary = "Get the authenticated user",
+            description = "The user must be authenticated to get the authenticated user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User found"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ExceptionDto.class)))
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    public ResponseEntity<UserDto> getMe(Authentication authentication) {
+        String token = authentication.getPrincipal().toString();
+        UserDto user = userService.getUser(authService.getUserIdFromToken(token));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @Operation(
             summary = "Get a user by id",
