@@ -53,7 +53,6 @@ public class UserService {
     public UserDto updateUser(Long id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
         user.setAddress(userDto.getAddress());
         user = userRepository.save(user);
