@@ -14,7 +14,7 @@ http {
     keepalive_timeout 65;
 
     server {
-        listen 8089;
+        listen 8984;
         server_name localhost;
 
         root /usr/share/nginx/html;
