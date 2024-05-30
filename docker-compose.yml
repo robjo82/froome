@@ -70,5 +70,23 @@ services:
     ports:
       - "8183:8183"
 
+  vue-app:
+    build:
+      context: ./froome-ui
+      dockerfile: Dockerfile
+    environment:
+      - user_api_url=user:8180
+      - product_api_url=product:8181
+      - payment_api_url=payment:8182
+      - order_api_url=order:8183
+    depends_on:
+      - user
+      - product
+      - payment
+      - order
+    ports:
+      - "80:80"
+
+
 volumes:
   db_data:
