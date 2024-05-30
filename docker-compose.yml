@@ -18,6 +18,7 @@ services:
       retries: 5
 
   user:
+    image: user-service
     depends_on:
       db:
         condition: service_healthy
@@ -27,11 +28,12 @@ services:
       dockerfile: user-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
-      PORT: 8180
+      PORT: 8980
     ports:
-      - "8180:8180"
+      - "8980:8980"
 
   product:
+    image: product-service
     depends_on:
       db:
         condition: service_healthy
@@ -40,11 +42,12 @@ services:
       dockerfile: product-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
-      PORT: 8181
+      PORT: 8981
     ports:
-      - "8181:8181"
+      - "8981:8981"
 
   payment:
+    image: payment-service
     depends_on:
       db:
         condition: service_healthy
@@ -53,11 +56,12 @@ services:
       dockerfile: payment-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
-      PORT: 8182
+      PORT: 8982
     ports:
-      - "8182:8182"
+      - "8982:8982"
 
   order:
+    image: order-service
     depends_on:
       db:
         condition: service_healthy
@@ -66,26 +70,27 @@ services:
       dockerfile: order-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
-      PORT: 8183
+      PORT: 8983
     ports:
-      - "8183:8183"
+      - "8983:8983"
 
   vue-app:
+    image: froome-ui
     build:
       context: ./froome-ui
       dockerfile: Dockerfile
     environment:
-      - user_api_url=user:8180
-      - product_api_url=product:8181
-      - payment_api_url=payment:8182
-      - order_api_url=order:8183
+      - user_api_url=http://user:8980
+      - product_api_url=http://product:8981
+      - payment_api_url=http://payment:8982
+      - order_api_url=http://order:8983
     depends_on:
       - user
       - product
       - payment
       - order
     ports:
-      - "80:80"
+      - "8984:8984"
 
 
 volumes:
