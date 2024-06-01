@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: order-service
+  cloud:
+    config:
+      uri: ${SPRING_CLOUD_CONFIG_URI:http://localhost:8985}
+      fail-fast: true

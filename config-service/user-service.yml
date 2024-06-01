@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8083}
+  port: ${PORT:8980}
 
 spring:
   cloud:
@@ -22,11 +22,12 @@ logging:
   level:
     org:
       hibernate:
-        SQL: debug
+        SQL: info
       springframework:
         jdbc:
-          core: debug
+          core: info
     root: info
 
 jwt:
   secret: yCEejd7w8gmc2LO4iv6vZYYW9yL2p1i3za9Fhm9ZdN2MmkFQ39t0RCWoOjC8TOnMNzH8fFVGKU6xffDYciRnAFTfakY8orzK6ShGlwJEnW4Ok9oHFUKx0XSTOrl14Ixa
+  expiration: 86400000

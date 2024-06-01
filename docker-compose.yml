@@ -17,17 +17,30 @@ services:
       timeout: 5s
       retries: 5
 
+  config-service:
+    image: config-service
+    build:
+      context: .
+      dockerfile: config-service/Dockerfile
+    environment:
+      GIT_URI: https://github.com/robjo82/froome/config-service
+    ports:
+      - "8985:8985"
+
   user:
     image: user-service
     depends_on:
       db:
         condition: service_healthy
-
+      config-service:
+        condition: service_started
     build:
       context: .
       dockerfile: user-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
+      SPRING_CLOUD_CONFIG_URI: http://config-service:8985
+      SPRING_PROFILES_ACTIVE: docker
       PORT: 8980
     ports:
       - "8980:8980"
@@ -37,11 +50,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      config-service:
+        condition: service_started
     build:
       context: .
       dockerfile: product-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
+      SPRING_CLOUD_CONFIG_URI: http://config-service:8985
+      SPRING_PROFILES_ACTIVE: docker
       PORT: 8981
     ports:
       - "8981:8981"
@@ -51,11 +68,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      config-service:
+        condition: service_started
     build:
       context: .
       dockerfile: payment-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
+      SPRING_CLOUD_CONFIG_URI: http://config-service:8985
+      SPRING_PROFILES_ACTIVE: docker
       PORT: 8982
     ports:
       - "8982:8982"
@@ -65,11 +86,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      config-service:
+        condition: service_started
     build:
       context: .
       dockerfile: order-service/Dockerfile
     environment:
       DB_URL: jdbc:mysql://froome-db:3306/froome
+      SPRING_CLOUD_CONFIG_URI: http://config-service:8985
+      SPRING_PROFILES_ACTIVE: docker
       PORT: 8983
     ports:
       - "8983:8983"
@@ -86,7 +111,6 @@ services:
       - order
     ports:
       - "8984:8984"
-
 
 volumes:
   db_data:
