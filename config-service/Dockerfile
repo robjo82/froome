@@ -17,19 +17,19 @@ COPY payment-service/src /build/payment-service/src
 COPY config-service/src /build/config-service/src
 
 WORKDIR /build
-RUN mvn clean package -DskipTests -pl product-service
+RUN mvn clean package -DskipTests -pl config-service
 
 FROM openjdk:21-jdk
 
 RUN mkdir /app
 
-COPY --from=build /build/product-service/target/product-service-*.jar /app/product-service.jar
+COPY --from=build /build/config-service/target/config-service-*.jar /app/config-service.jar
 
-RUN groupadd -r appproduct && useradd -r -g appproduct appproduct
-RUN chown -R appproduct:appproduct /app
+RUN groupadd -r appconfig && useradd -r -g appconfig appconfig
+RUN chown -R appconfig:appconfig /app
 
-USER appproduct
+USER appconfig
 
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","product-service.jar"]
+ENTRYPOINT ["java","-jar","config-service.jar"]
