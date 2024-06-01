@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://froome-db:3307/froome}
+    url: ${DB_URL:jdbc:mysql://froome-db:3306/froome}
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,10 +19,10 @@ logging:
   level:
     org:
       hibernate:
-        SQL: debug
+        SQL: info
       springframework:
         jdbc:
-          core: debug
+          core: info
     root: info
 
 jwt:
