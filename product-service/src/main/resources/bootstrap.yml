@@ -3,7 +3,5 @@ spring:
     name: product-service
   config:
     import: configserver:http://config-service:8985
-  cloud:
-    config:
-      uri: ${SPRING_CLOUD_CONFIG_URI:http://config-service:8985}
-      fail-fast: true
+  profiles:
+    active: docker
