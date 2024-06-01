@@ -23,9 +23,15 @@ services:
       context: .
       dockerfile: config-service/Dockerfile
     environment:
-      GIT_URI: https://github.com/robjo82/froome/config-service
+      GIT_URI: https://github.com/robjo82/froome.git
+      PORT: 8985
     ports:
       - "8985:8985"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:8985/actuator/health | grep UP" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   user:
     image: user-service
@@ -33,7 +39,7 @@ services:
       db:
         condition: service_healthy
       config-service:
-        condition: service_started
+        condition: service_healthy
     build:
       context: .
       dockerfile: user-service/Dockerfile
@@ -51,7 +57,7 @@ services:
       db:
         condition: service_healthy
       config-service:
-        condition: service_started
+        condition: service_healthy
     build:
       context: .
       dockerfile: product-service/Dockerfile
@@ -69,7 +75,7 @@ services:
       db:
         condition: service_healthy
       config-service:
-        condition: service_started
+        condition: service_healthy
     build:
       context: .
       dockerfile: payment-service/Dockerfile
@@ -87,7 +93,7 @@ services:
       db:
         condition: service_healthy
       config-service:
-        condition: service_started
+        condition: service_healthy
     build:
       context: .
       dockerfile: order-service/Dockerfile

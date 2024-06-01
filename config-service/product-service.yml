@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3307/froome}
+    url: ${DB_URL:jdbc:mysql://froome-db:3307/froome}
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver

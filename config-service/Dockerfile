@@ -21,12 +21,12 @@ RUN mvn clean package -DskipTests -pl config-service
 
 FROM openjdk:21-jdk
 
-RUN mkdir /app
+RUN mkdir -p /app /home/appconfig/.config/jgit
 
 COPY --from=build /build/config-service/target/config-service-*.jar /app/config-service.jar
 
 RUN groupadd -r appconfig && useradd -r -g appconfig appconfig
-RUN chown -R appconfig:appconfig /app
+RUN chown -R appconfig:appconfig /app /home/appconfig/.config
 
 USER appconfig
 
