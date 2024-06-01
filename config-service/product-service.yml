@@ -15,6 +15,22 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8986/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 logging:
   level:
     org:

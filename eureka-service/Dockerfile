@@ -19,19 +19,19 @@ COPY config-service/src /build/config-service/src
 COPY eureka-service/src /build/eureka-service/src
 
 WORKDIR /build
-RUN mvn clean package -DskipTests -pl payment-service
+RUN mvn clean package -DskipTests -pl eureka-service
 
 FROM openjdk:21-jdk
 
 RUN mkdir /app
 
-COPY --from=build /build/payment-service/target/payment-service-*.jar /app/payment-service.jar
+COPY --from=build /build/eureka-service/target/eureka-service-*.jar /app/eureka-service.jar
 
-RUN groupadd -r apppayment && useradd -r -g apppayment apppayment
-RUN chown -R apppayment:apppayment /app
+RUN groupadd -r appeureka && useradd -r -g appeureka appeureka
+RUN chown -R appeureka:appeureka /app
 
-USER apppayment
+USER appeureka
 
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","payment-service.jar"]
+ENTRYPOINT ["java","-jar","eureka-service.jar"]

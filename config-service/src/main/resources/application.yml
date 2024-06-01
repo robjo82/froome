@@ -15,3 +15,20 @@ logging:
     org.springframework.cloud.config.client: INFO
     org.springframework.cloud.context.scope.GenericScope: INFO
     org.springframework.boot.context.config: INFO
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-service:8986/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
