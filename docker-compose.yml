@@ -79,11 +79,6 @@ services:
     build:
       context: ./froome-ui
       dockerfile: Dockerfile
-    environment:
-      - user_api_url=http://user:8980
-      - product_api_url=http://product:8981
-      - payment_api_url=http://payment:8982
-      - order_api_url=http://order:8983
     depends_on:
       - user
       - product
