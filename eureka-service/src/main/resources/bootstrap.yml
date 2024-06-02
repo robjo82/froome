@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: eureka-service
+  config:
+    import: configserver:http://config-service:8985
+  profiles:
+    active: docker
