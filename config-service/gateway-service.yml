@@ -24,24 +24,28 @@ spring:
             - Path=/users/**
           filters:
             - RewritePath=/users/(?<segment>.*), /$\{segment}
+            - ModifyResponseBody
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/products/**
           filters:
             - RewritePath=/products/(?<segment>.*), /$\{segment}
+            - ModifyResponseBody
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payments/**
           filters:
             - RewritePath=/payments/(?<segment>.*), /$\{segment}
+            - ModifyResponseBody
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/orders/**
           filters:
             - RewritePath=/orders/(?<segment>.*), /$\{segment}
+            - ModifyResponseBody
       globalcors:
         corsConfigurations:
           '[/**]':
