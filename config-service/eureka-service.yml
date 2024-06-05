@@ -9,3 +9,7 @@ eureka:
 spring:
   application:
     name: eureka-service
+
+logging:
+  level:
+    root: info
