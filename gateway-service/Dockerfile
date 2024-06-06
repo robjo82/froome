@@ -8,6 +8,7 @@ COPY payment-service/pom.xml /build/payment-service/pom.xml
 COPY config-service/pom.xml /build/config-service/pom.xml
 COPY eureka-service/pom.xml /build/eureka-service/pom.xml
 COPY gateway-service/pom.xml /build/gateway-service/pom.xml
+COPY gateway-service/pom.xml /build/gateway-service/pom.xml
 
 WORKDIR /build
 RUN mvn dependency:go-offline
@@ -21,19 +22,19 @@ COPY eureka-service/src /build/eureka-service/src
 COPY gateway-service/src /build/gateway-service/src
 
 WORKDIR /build
-RUN mvn clean package -DskipTests -pl user-service
+RUN mvn clean package -DskipTests -pl gateway-service
 
 FROM openjdk:21-jdk
 
 RUN mkdir /app
 
-COPY --from=build /build/user-service/target/user-service-*.jar /app/user-service.jar
+COPY --from=build /build/gateway-service/target/gateway-service-*.jar /app/gateway-service.jar
 
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-RUN chown -R appuser:appuser /app
+RUN groupadd -r appgateway && useradd -r -g appgateway appgateway
+RUN chown -R appgateway:appgateway /app
 
-USER appuser
+USER appgateway
 
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","user-service.jar"]
+ENTRYPOINT ["java","-jar","gateway-service.jar"]

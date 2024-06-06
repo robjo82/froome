@@ -7,6 +7,7 @@ COPY order-service/pom.xml /build/order-service/pom.xml
 COPY payment-service/pom.xml /build/payment-service/pom.xml
 COPY config-service/pom.xml /build/config-service/pom.xml
 COPY eureka-service/pom.xml /build/eureka-service/pom.xml
+COPY gateway-service/pom.xml /build/gateway-service/pom.xml
 
 WORKDIR /build
 RUN mvn dependency:go-offline
@@ -17,6 +18,7 @@ COPY order-service/src /build/order-service/src
 COPY payment-service/src /build/payment-service/src
 COPY config-service/src /build/config-service/src
 COPY eureka-service/src /build/eureka-service/src
+COPY gateway-service/src /build/gateway-service/src
 
 WORKDIR /build
 RUN mvn clean package -DskipTests -pl payment-service
