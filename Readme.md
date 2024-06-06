@@ -35,3 +35,5 @@ The project is accessible at https://froome.robin-joseph.fr. You can create an a
 - Password: string
 
 To run the project locally, you can clone the master branch and start the docker-compose. The project will then be available on port 8984. Ports 8980, 8981, 8982, and 8983 are also mapped to access the Swagger documentation of the different APIs via /swagger-ui/index.html. Port 8986 is also mapped for the Eureka console. These mappings are not necessary if you do not need to access documentation or monitoring information, so feel free to disable them in the docker-compose if there is a conflict.
+
+![Architecture.png](https://github.com/robjo82/froome/blob/main/froome-ui/public/Architecture.png?raw=true)
