@@ -1,0 +1,1 @@
+J'utilise Spring Cloud Gateway plutôt que Zuul parce que Zuul n'est plus maintenu depuis plusieurs années, alors j'ai pensé que c'était plus efficace de me concentrer sur le projet qui l'a officiellement remplacé. J'espère que vous comprendrez ce choix, je n'avais pas envie de dépenser du temps sur une ancienne technologie.
