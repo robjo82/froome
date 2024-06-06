@@ -21,31 +21,19 @@ spring:
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/users/**
-          filters:
-            - RemoveDuplicateHeaders
-
+            - Path=/api/users/**
         - id: product-service
           uri: lb://product-service
           predicates:
-            - Path=/products/**
-            - RemoveDuplicateHeaders
-          filters:
-            - RemoveDuplicateHeaders
-
+            - Path=/api/products/**
         - id: payment-service
           uri: lb://payment-service
           predicates:
-            - Path=/payments/**
-          filters:
-            - RemoveDuplicateHeaders
-
+            - Path=/api/payments/**
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/orders/**
-          filters:
-            - RemoveDuplicateHeaders
+            - Path=/api/orders/**
 
       globalcors:
         corsConfigurations:
