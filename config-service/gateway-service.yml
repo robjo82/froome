@@ -24,28 +24,28 @@ spring:
             - Path=/users/**
           filters:
             - RewritePath=/users/(?<segment>.*), /$\{segment}
-            - ModifyResponseBody
+            - RemoveDuplicateHeaders
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/products/**
+            - RemoveDuplicateHeaders
           filters:
             - RewritePath=/products/(?<segment>.*), /$\{segment}
-            - ModifyResponseBody
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payments/**
           filters:
             - RewritePath=/payments/(?<segment>.*), /$\{segment}
-            - ModifyResponseBody
+            - RemoveDuplicateHeaders
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/orders/**
           filters:
             - RewritePath=/orders/(?<segment>.*), /$\{segment}
-            - ModifyResponseBody
+            - RemoveDuplicateHeaders
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -59,6 +59,7 @@ spring:
               - HEAD
             allowedHeaders: "*"
             allowCredentials: false
+            maxAge: 3600
 
 management:
   endpoints:
