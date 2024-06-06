@@ -23,29 +23,30 @@ spring:
           predicates:
             - Path=/users/**
           filters:
-            - RewritePath=/users/(?<segment>.*), /$\{segment}
             - RemoveDuplicateHeaders
+
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/products/**
             - RemoveDuplicateHeaders
           filters:
-            - RewritePath=/products/(?<segment>.*), /$\{segment}
+            - RemoveDuplicateHeaders
+
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payments/**
           filters:
-            - RewritePath=/payments/(?<segment>.*), /$\{segment}
             - RemoveDuplicateHeaders
+
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/orders/**
           filters:
-            - RewritePath=/orders/(?<segment>.*), /$\{segment}
             - RemoveDuplicateHeaders
+
       globalcors:
         corsConfigurations:
           '[/**]':
