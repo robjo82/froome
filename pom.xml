@@ -16,6 +16,7 @@
         <module>payment-service</module>
         <module>config-service</module>
         <module>eureka-service</module>
+        <module>gateway-service</module>
     </modules>
 
     <properties>
