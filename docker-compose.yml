@@ -16,9 +16,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - froome-network
 
   eureka-service:
     image: eureka-service
+    depends_on:
+      config-service:
+        condition: service_healthy
     build:
       context: .
       dockerfile: eureka-service/Dockerfile
@@ -31,12 +36,31 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - froome-network
 
-  config-service:
-    image: config-service
+  gateway-service:
+    image: gateway-service
     depends_on:
       eureka-service:
         condition: service_healthy
+      config-service:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    ports:
+      - "8987:8987"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:8987/actuator/health | grep UP" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - froome-network
+
+  config-service:
+    image: config-service
     build:
       context: .
       dockerfile: config-service/Dockerfile
@@ -50,6 +74,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - froome-network
 
   user:
     image: user-service
@@ -70,6 +96,8 @@ services:
       PORT: 8980
     ports:
       - "8980:8980"
+    networks:
+      - froome-network
 
   product:
     image: product-service
@@ -90,6 +118,8 @@ services:
       PORT: 8981
     ports:
       - "8981:8981"
+    networks:
+      - froome-network
 
   payment:
     image: payment-service
@@ -110,6 +140,8 @@ services:
       PORT: 8982
     ports:
       - "8982:8982"
+    networks:
+      - froome-network
 
   order:
     image: order-service
@@ -130,6 +162,8 @@ services:
       PORT: 8983
     ports:
       - "8983:8983"
+    networks:
+      - froome-network
 
   vue-app:
     image: froome-ui
@@ -141,8 +175,14 @@ services:
       - product
       - payment
       - order
+      - eureka-service
     ports:
       - "8984:8984"
+    networks:
+      - froome-network
+
+networks:
+  froome-network:
 
 volumes:
   db_data:
